@@ -40,9 +40,10 @@
         </div>
     </nav>
 
-    <!-- Page content -->
+    <!-- Page content: Course details with Bootstrap styling -->
     <div class="container mt-4">
-        <h2>{{ course.name }}</h2>
+        <h2 class="text-primary my-3">{{ course.name }}</h2>
+        <!-- Lessons list styled with Bootstrap cards -->
         <div class="card-deck mt-3">
             {% for lesson in course.lesson_set.all %}
                 <div class="card mt-2 mb-2">

@@ -109,7 +109,7 @@ class Question(models.Model):
     courses = models.ManyToManyField(Course, blank=True, related_name='question_courses')
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, null=True, blank=True)
     question_text = models.TextField()
-    grade = models.IntegerField(default=50)
+    grade = models.IntegerField(default=1)
 
     # <HINT> A sample model method to calculate if learner get the score of the question
     def is_get_score(self, selected_ids):
@@ -139,7 +139,7 @@ class Question(models.Model):
     # Other fields and methods you would like to design
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice_text = models.TextField()
+    choice_text = models.CharField(max_length=100)
     is_correct = models.BooleanField(default=False)
 
     def __str__(self):
@@ -155,4 +155,4 @@ class Submission(models.Model):
     choices = models.ManyToManyField(Choice)
 
     def __str__(self):
-        return f"Submission {self.id} for {self.enrollment}"
+        return f"Enrollment ID: {self.enrollment.id}"
