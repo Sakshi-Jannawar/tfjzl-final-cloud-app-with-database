@@ -158,7 +158,7 @@ def show_exam_result(request, course_id, submission_id):
     total_possible = 0
 
     questions = Question.objects.filter(
-        models.Q(lesson__course=course) | models.Q(courses=course)
+        models.Q(lesson__course=course) | models.Q(course=course) | models.Q(courses=course)
     ).distinct()
 
     for question in questions:

@@ -94,6 +94,9 @@ class Enrollment(models.Model):
     mode = models.CharField(max_length=5, choices=COURSE_MODES, default=AUDIT)
     rating = models.FloatField(default=5.0)
 
+    def __str__(self):
+        return "User: " + self.user.username + ", Course: " + self.course.name
+
 
 # <HINT> Create a Question Model with:
     # Used to persist question content for a course
@@ -102,10 +105,11 @@ class Enrollment(models.Model):
     # Has question content
     # Other fields and methods you would like to design
 class Question(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, null=True, blank=True)
+    courses = models.ManyToManyField(Course, blank=True, related_name='question_courses')
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, null=True, blank=True)
-    courses = models.ManyToManyField(Course, blank=True)
-    question_text = models.CharField(max_length=1000)
-    grade = models.IntegerField(default=50)
+    question_text = models.CharField(max_length=200)
+    grade = models.IntegerField(default=5)
 
     # <HINT> A sample model method to calculate if learner get the score of the question
     def is_get_score(self, selected_ids):
@@ -117,9 +121,11 @@ class Question(models.Model):
             return False
 
     def save(self, *args, **kwargs):
+        if self.lesson and not self.course:
+            self.course = self.lesson.course
         super().save(*args, **kwargs)
-        if self.lesson and self.lesson.course:
-            self.courses.add(self.lesson.course)
+        if self.course:
+            self.courses.add(self.course)
 
     def __str__(self):
         return self.question_text
@@ -133,7 +139,7 @@ class Question(models.Model):
     # Other fields and methods you would like to design
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice_text = models.CharField(max_length=1000)
+    choice_text = models.CharField(max_length=200)
     is_correct = models.BooleanField(default=False)
 
     def __str__(self):
@@ -149,4 +155,4 @@ class Submission(models.Model):
     choices = models.ManyToManyField(Choice)
 
     def __str__(self):
-        return f"Submission {self.id} for {self.enrollment}"
+        return "Enrollment: " + str(self.enrollment)
