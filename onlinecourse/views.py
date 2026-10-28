@@ -187,7 +187,9 @@ def show_exam_result(request, course_id, submission_id):
         'submission': submission,
         'selected_ids': ChoiceContainer(selected_choices),
         'grade': grade,
+        'score': total_score,
         'total_score': total_score,
+        'possible': total_possible,
         'total_possible': total_possible,
     }
     return render(request, 'onlinecourse/exam_result_bootstrap.html', context)
